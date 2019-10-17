@@ -20,9 +20,7 @@ play_area_width_abs = background_x - 2 * play_area_offset_abs
 play_area_height_abs = background_y - 2 * play_area_offset_abs
 play_area_height = play_area_height_abs / play_area_width_abs
 play_area_sf = play_area_width_abs / background_x
-ball_size = 0.032 * play_area_sf / 2
-ball_radius = ball_size
-
+ball_radius = 0.0185
 
 play_area = np.array(
     [
@@ -60,10 +58,8 @@ def scale_images():
 
     for ball in images["balls"]:
         img = images["balls"][ball]
-        images["balls"][ball].width, images["balls"][ball].height = (
-            2 * ball_size  * background_x / play_area_sf,
-            2 * ball_size  * background_x / play_area_sf,
-        )
+        size = 2*(from_table_space(ball_radius) - from_table_space(0))
+        images["balls"][ball].width, images["balls"][ball].height = size, size 
         center_image(img)
 
     return images, resolution
@@ -100,14 +96,13 @@ pockets = {
     ),
 }
 
-
 def from_table_space(point):
-    x = play_area[0] + point * play_area_width_abs
+    x = play_area[0][0] + point * play_area_width_abs
     return x.astype(int)
 
 
 def to_table_space(point):
-    x = (point - play_area[0]) / play_area_width_abs
+    x = (point - play_area[0][0]) / play_area_width_abs
     return x.astype(float)
 
 
