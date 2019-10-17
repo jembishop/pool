@@ -26,6 +26,5 @@ def potted(ball, hit):
             pocket[0] = "t"
 
     if not None in pocket:
-        print(f"POT!! {pocket}")
         if ball.color != "cue":
             return ball, pocket

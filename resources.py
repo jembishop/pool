@@ -5,11 +5,6 @@ import numpy as np
 import pyglet
 
 
-def center_image(image):
-    image.anchor_x = image.width // 2
-    image.anchor_y = image.height // 2
-
-
 pyglet.resource.path = ["resources"]
 pyglet.resource.reindex()
 
@@ -38,6 +33,11 @@ play_area = np.array(
 ) + np.array([-1, -1])
 
 
+def center_image(image):
+    image.anchor_x = image.width // 2
+    image.anchor_y = image.height // 2
+
+
 def scale_images():
     resolution = background_x, background_y
     images = {
@@ -58,8 +58,8 @@ def scale_images():
 
     for ball in images["balls"]:
         img = images["balls"][ball]
-        size = 2*(from_table_space(ball_radius) - from_table_space(0))
-        images["balls"][ball].width, images["balls"][ball].height = size, size 
+        size = 2 * (Table.from_space(ball_radius) - Table.from_space(0))
+        images["balls"][ball].width, images["balls"][ball].height = size, size
         center_image(img)
 
     return images, resolution
@@ -96,14 +96,27 @@ pockets = {
     ),
 }
 
-def from_table_space(point):
-    x = play_area[0][0] + point * play_area_width_abs
-    return x.astype(int)
+
+def init():
+    screens = pyglet.window.get_platform().get_default_display().get_screens()
+    screen = max(screens, key=lambda x: x.width)
+    window = pyglet.window.Window(*resolution, screen=screen)
+    return window
 
 
-def to_table_space(point):
-    x = (point - play_area[0][0]) / play_area_width_abs
-    return x.astype(float)
+class Table:
+    def __init__(self):
+        self.sprite = pyglet.sprite.Sprite(images["table"])
+
+    @staticmethod
+    def from_space(point):
+        x = play_area[0][0] + point * play_area_width_abs
+        return x.astype(int)
+
+    @staticmethod
+    def to_space(point):
+        x = (point - play_area[0][0]) / play_area_width_abs
+        return x.astype(float)
 
 
 def draw_points(points, color=(255, 255, 255)):
@@ -116,9 +129,6 @@ def draw_points(points, color=(255, 255, 255)):
     )
 
 
-def init():
-    screens = pyglet.window.get_platform().get_default_display().get_screens()
-    screen = max(screens, key=lambda x: x.width)
-    images, resolution = scale_images()
-    window = pyglet.window.Window(*resolution, screen=screen)
-    return window, images
+images, resolution = scale_images()
+window = init()
+table = Table()

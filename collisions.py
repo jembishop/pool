@@ -2,7 +2,7 @@ from resources import ball_radius, play_area_height
 import numpy as np
 
 ball_cor = 0.9
-cushion_loss = 0.25
+cushion_loss = 0.3
 
 
 def mag(x):
@@ -16,7 +16,7 @@ def ball_collision(b1, b2):
 
     if mag_new_dist > touch_dist:
         return
-    print("ball collision")
+
     # cm frame
     dist = b2.pos - b1.pos
     mean_vel = (b1.vel + b2.vel) / 2
@@ -72,7 +72,6 @@ def cushion_collision(ball):
     if hit:
         ball.pos = ball.pos + np.array([x_dist, y_dist])
         ball.new_pos = ball.pos
-        print("cushion collision")
         if hit in ["t", "b"]:
             ball.vel[1] *= -(1 - cushion_loss)
         else:

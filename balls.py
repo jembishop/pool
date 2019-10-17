@@ -5,9 +5,11 @@ from collisions import mag
 
 
 balls_batch = pyglet.graphics.Batch()
+
+
 class Ball:
 
-    static_drag = 0.0015
+    static_drag = 0.001
     linear_drag = 0.0025
 
     def __init__(self, color, pos, vel=np.array([0, 0])):
