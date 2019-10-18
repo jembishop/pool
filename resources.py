@@ -48,13 +48,11 @@ def scale_images():
                 "*ball.png"
             )
         },
+        "cue": pyglet.resource.image("cue.png"),
     }
-    for image in images:
-        if image != "balls":
-            images[image].width, images[image].height = (
-                images[image].width,
-                images[image].height,
-            )
+
+    images["cue"].anchor_x = images["cue"].width
+    images["cue"].anchor_y = images["cue"].height / 2
 
     for ball in images["balls"]:
         img = images["balls"][ball]
