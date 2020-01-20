@@ -107,14 +107,16 @@ def update(dt):
         balls.add(ball)
     if keyboard[key.Z]:
         mod = 0.1
+    elif keyboard[key.X]:
+        mod = 3
     else:
-        mod = 2
+        mod = 1
     if keyboard[key.LEFT]:
         player.move(-mod)
     elif keyboard[key.RIGHT]:
         player.move(mod)
     elif keyboard[key.SPACE] and allowed_to_hit:
-        player.hit(cue_ball)
+        player.hit()
 
 
 pyglet.clock.schedule_interval(update, 1 / 120.0)

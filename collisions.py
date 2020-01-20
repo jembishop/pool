@@ -9,12 +9,12 @@ def mag(x):
     return np.sqrt(np.dot(x, x))
 
 
-def ball_collision(b1, b2):
+def ball_collision(b1, b2, nocheck=False):
     new_dist = b2.new_pos - b1.new_pos
     mag_new_dist = mag(new_dist)
     touch_dist = 2 * ball_radius
 
-    if mag_new_dist > touch_dist:
+    if mag_new_dist > touch_dist or nocheck:
         return
 
     # cm frame
@@ -25,9 +25,10 @@ def ball_collision(b1, b2):
     # compute scoot factor
     mag_v = mag(vel_cm)
     v_bar = vel_cm / mag_v
-    scoot = np.dot(dist, v_bar) - np.sqrt(
-        (touch_dist) ** 2 - mag(dist) ** 2 + np.dot(dist, v_bar) ** 2
-    )
+    term = (touch_dist) ** 2 - mag(dist) ** 2 + np.dot(dist, v_bar) ** 2
+    if term < 0:
+        return False
+    scoot = np.dot(dist, v_bar) - np.sqrt(term)
     # update new position of balls after the scoot
     t_scoot = scoot / (2 * mag_v)
     b1.pos = b1.pos + t_scoot * b1.vel
@@ -39,6 +40,7 @@ def ball_collision(b1, b2):
     new_speed = ball_cor * mag_v
     b1.vel = -dist * new_speed + mean_vel
     b2.vel = dist * new_speed + mean_vel
+    return True
 
 
 def cushion_collision(ball):

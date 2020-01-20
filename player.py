@@ -11,8 +11,7 @@ class Player:
     init_cue_ball_dist = 0.05
     power = 0.6
     inc = 0.01
-
-    def __init__(self, angle=0, pos=None, cue_ball=None):
+    def __init__(self, angle=0, pos=None, cue_ball=None, show_preview=True):
         self.angle = angle
         self.cue_ball = cue_ball
         if cue_ball:
@@ -28,11 +27,10 @@ class Player:
         )
         self.sprite = pyglet.sprite.Sprite(img, tpos[0], tpos[1], subpixel=True)
 
-    def hit(self, ball):
-        ball.vel = self.power * unit_vec(self.angle)
+    def hit(self):
+        self.cue_ball.vel = self.power * unit_vec(self.angle)
 
     def move(self, dir):
-        print(self.angle)
         self.angle += dir * self.inc
         self.sprite.update(rotation=-(self.angle * (180 / np.pi)) % 360)
 
@@ -40,4 +38,7 @@ class Player:
         self.pos = self.cue_ball.pos
         pos = table.from_space(self.pos)
         self.sprite.update(x=pos[0], y=pos[1])
+
+
+
 
